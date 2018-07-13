@@ -53,8 +53,10 @@ function removeTodoAction (id) {
 }
 
 function toggleTodoAction (id) {
-  type: TOGGLE_TODO,
-  id,
+  return {
+    type: TOGGLE_TODO,
+    id,
+  }
 }
 
 function addGoalAction (goal) {
