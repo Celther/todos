@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Todos/Goals</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js'></script>
   </head>
   <body>
     <div>
@@ -21,38 +22,6 @@
       // ID Generator, stackoverflow
       function generateId () {
         return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
-      }
-
-      // Library code, normally not present
-      function createStore (reducer) {
-        // The store should have four parts
-        // 1. The state - Private/Not public facing
-        // 2. Get the state.
-        // 3. Listen to changes on the state.
-        // 4. Update the state
-
-        let state
-        let listeners = []
-
-        const getState = () => state
-
-        const subscribe = (listener) => {
-          listeners.push(listener)
-          return () => {
-            listeners = listeners.filter((l) => l !== listener)
-          }
-        }
-
-        const dispatch = (action) => {
-          state = reducer(state, action)
-          listeners.forEach((listener) => listener())
-        }
-
-        return {
-          getState,
-          subscribe,
-          dispatch,
-        }
       }
 
       // App code applied to the Library
@@ -98,6 +67,24 @@
         }
       }
 
+      const checker = (store) => (next) => (action) => {
+        if (
+          action.type === ADD_TODO &&
+          action.todo.name.toLowerCase().indexOf('bitcoin') !== -1
+        ) {
+          return alert("Nope. That's a bad idea.")
+        }
+
+        if (
+          action.type === ADD_GOAL &&
+          action.goal.name.toLowerCase().indexOf('bitcoin') !== -1
+        ) {
+          return alert("Nope. That's a bad idea.")
+        }
+
+        return next(action)
+      }
+
       // Reducer function todos
       function todos (state = [], action) {
         switch (action.type) {
@@ -125,14 +112,10 @@
         }
       }
 
-      function app (state = {}, action) {
-        return {
-          todos: todos(state.todos, action),
-          goals: goals(state.goals, action)
-        }
-      }
-
-      const store = createStore(app)
+      const store = Redux.createStore(Redux.combineReducers({
+        todos,
+        goals,
+      }), Redux.applyMiddleware(checker))
 
       const listen = store.subscribe(() => {
         const { goals, todos } = store.getState()
