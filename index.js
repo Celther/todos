@@ -128,13 +128,13 @@ store.dispatch(addTodoAction({
   id: 1,
   name: 'Wash the car',
   complete: false,
-})
+}))
 
 store.dispatch(addTodoAction({
   id: 2,
   name: 'Go to the gym',
   complete: true,
-})
+}))
 
 store.dispatch(removeTodoAction(1))
 
