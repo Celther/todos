@@ -133,40 +133,53 @@ function createRemoveButton (onClick) {
   return removeBtn
 }
 
+function addTodo () {
+        const input = document.getElementById('todo')
+        const name = input.value
+        input.value = ''
+
+        store.dispatch(addTodoAction({
+          id: generateId(),
+          name,
+          complete: false
+        }))
+}
+
 function addTodoToDOM (todo) {
-  const node = document.createElement('li')
-  const text = document.createTextNode(todo.name)
+        const node = document.createElement('li')
+        const text = document.createTextNode(todo.name)
 
-  const removeBtn = createRemoveButton(() => {
-    store.dispatch(removeTodoAction(todo.id))
-  })
+        const removeBtn = createRemoveButton(() => {
+          store.dispatch(removeTodoAction(todo.id))
+        })
 
-  node.appendChild(text)
+        node.appendChild(text)
+        node.appendChild(removeBtn)
 
+        node.style.textDecoration = todo.complete ? 'line-through' : 'none'
+        node.addEventListener('click', () => {
+          store.dispatch(toggleTodoAction(todo.id))
+        })
 
-  document.getElementById('todos')
-    .appendChild(node)
+        document.getElementById('todos')
+          .appendChild(node)
 }
 
 function addGoalToDOM (goal) {
-  const node = document.createElement('li')
-  const text = document.createTextNode(goal.name)
-  node.appendChild(text)
+        const node = document.createElement('li')
+        const text = document.createTextNode(goal.name)
 
-  document.getElementById('goals')
-    .appendChild(node)
-}
+        const removeBtn = createRemoveButton(() => {
+          store.dispatch(removeGoalAction(goal.id))
+        })
 
-function addTodo () {
-  const input = document.getElementById('todo')
-  const name = input.value
-  input.value = ''
+        node.appendChild(text)
+        node.appendChild(removeBtn)
 
-  store.dispatch(addTodoAction({
-    id: generateId(),
-    name,
-    complete: false
-  }))
+        node.style.textDecoration = goal.complete ? 'line-through' : 'none'
+
+        document.getElementById('goals')
+          .appendChild(node)
 }
 
 function addGoal () {
