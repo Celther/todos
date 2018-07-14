@@ -227,7 +227,7 @@
             {props.items.map((item) => (
               <li key={item.id}>
                 <span
-                  onClick={() => props.toggle(item)}
+                  onClick={() => props.toggle && props.toggle(item)}
                   style={{textDecoration: item.complete ? 'line-through' : 'none'}}
                 >
                   {item.name}
